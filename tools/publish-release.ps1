@@ -30,8 +30,16 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
     throw "GitHub CLI (gh) bulunamadı. Kurun: winget install GitHub.cli   ardından: gh auth login"
 }
 
-& gh auth status *> $null
-if ($LASTEXITCODE -ne 0) { throw "GitHub'a giriş yapılmamış. Çalıştırın: gh auth login" }
+# gh'nin stderr'e yazdığı olağan cevaplar (ör. "release not found") PowerShell 5'te
+# ErrorActionPreference=Stop iken hata sayılır; yalnızca çıkış koduna bakılır.
+function Test-Gh {
+    $saved = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try { & gh @args *> $null; return ($LASTEXITCODE -eq 0) }
+    finally { $ErrorActionPreference = $saved }
+}
+
+if (-not (Test-Gh auth status)) { throw "GitHub'a giriş yapılmamış. Çalıştırın: gh auth login" }
 
 $csproj  = [IO.File]::ReadAllText($project, $utf8)
 $version = [regex]::Match($csproj, '<Version>([^<]+)</Version>').Groups[1].Value
@@ -56,8 +64,7 @@ if ((Get-FileHash $setupPath -Algorithm SHA256).Hash -ne $feed.sha256) {
 
 $tag = "v$version"
 
-& gh release view $tag --repo $repo *> $null
-if ($LASTEXITCODE -eq 0) {
+if (Test-Gh release view $tag --repo $repo) {
     throw "$repo deposunda $tag zaten yayınlanmış. Yeni sürüm için: build-installer.ps1 -Bump patch"
 }
 
