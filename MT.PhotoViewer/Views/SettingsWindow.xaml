@@ -1,0 +1,157 @@
+<Window x:Class="MT.PhotoViewer.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ayarlar"
+        Height="640" Width="520"
+        MinHeight="480"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        FontFamily="{StaticResource UiFont}"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}">
+
+    <!-- Guide §31 -->
+    <Window.Resources>
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Margin" Value="0,22,0,10"/>
+        </Style>
+
+        <!-- Fluent kontrollere yalnızca boşluk ekler; görünüm WPF-UI'dan gelir. -->
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Margin" Value="0,6"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24,20,24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Padding="0,0,12,0">
+            <StackPanel>
+
+                <TextBlock Text="Görünüm" Style="{StaticResource SectionHeader}" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Tema" Style="{StaticResource MTLabel}" Margin="0,0,0,5"/>
+                <ComboBox
+                          ItemsSource="{Binding Themes}"
+                          SelectedItem="{Binding Theme}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource DisplayName}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Text="Fotoğraf arka planı" Style="{StaticResource MTLabel}" Margin="0,14,0,5"/>
+                <ComboBox
+                          ItemsSource="{Binding Backgrounds}"
+                          SelectedItem="{Binding PhotoBackground}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource DisplayName}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <CheckBox
+                          Content="Tam ekranda kontrolleri otomatik gizle"
+                          IsChecked="{Binding AutoHideControls}"
+                          Margin="0,14,0,0"/>
+
+                <TextBlock Text="Görüntüleme" Style="{StaticResource SectionHeader}"/>
+
+                <TextBlock Text="Başlangıç zoom davranışı" Style="{StaticResource MTLabel}" Margin="0,0,0,5"/>
+                <ComboBox
+                          ItemsSource="{Binding StartupZoomModes}"
+                          SelectedItem="{Binding StartupZoom}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource DisplayName}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <CheckBox Content="Mouse wheel ile zoom"
+                          IsChecked="{Binding MouseWheelZoom}" Margin="0,14,0,0"/>
+                <CheckBox Content="Yumuşak zoom"
+                          IsChecked="{Binding SmoothZoom}"/>
+                <CheckBox Content="Yüksek kaliteli interpolation"
+                          IsChecked="{Binding HighQualityInterpolation}"/>
+
+                <TextBlock Text="Slayt gösterisi süresi (saniye)" Style="{StaticResource MTLabel}" Margin="0,12,0,5"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="44"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider Grid.Column="0" Minimum="1" Maximum="30"
+                            Value="{Binding SlideshowIntervalSeconds}"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="{Binding SlideshowIntervalSeconds}"
+                               TextAlignment="Right" VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </Grid>
+
+                <TextBlock Text="Dosyalar" Style="{StaticResource SectionHeader}"/>
+
+                <TextBlock Text="Desteklenen formatlar" Style="{StaticResource MTLabel}" Margin="0,0,0,5"/>
+                <TextBlock Text="{Binding SupportedFormatsText}"
+                           TextWrapping="Wrap"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                <Button x:Name="FileAssociationButton"
+                        Content="Varsayılan uygulama ayarlarını aç"
+                        Style="{StaticResource MTButton}"
+                        HorizontalAlignment="Left"
+                        Margin="0,12,0,0"/>
+
+                <TextBlock Text="Performans" Style="{StaticResource SectionHeader}"/>
+
+                <CheckBox
+                          Content="Önceki/sonraki fotoğrafları ön yükle"
+                          IsChecked="{Binding PreloadNeighbors}"/>
+
+                <TextBlock Text="Cache boyutu (fotoğraf)" Style="{StaticResource MTLabel}" Margin="0,12,0,5"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="44"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider Grid.Column="0" Minimum="2" Maximum="32"
+                            Value="{Binding CacheSize}"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="{Binding CacheSize}"
+                               TextAlignment="Right" VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </Grid>
+
+                <TextBlock Text="Genel" Style="{StaticResource SectionHeader}"/>
+
+                <CheckBox
+                          Content="Son pencere konumunu hatırla"
+                          IsChecked="{Binding RememberWindowPosition}"/>
+                <CheckBox
+                          Content="Başlangıçta güncelleme kontrolü yap"
+                          IsChecked="{Binding CheckForUpdates}"/>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button x:Name="CancelButton" Content="İptal" Style="{StaticResource MTButton}" IsCancel="True"/>
+            <Button x:Name="OkButton" Content="Tamam" Style="{StaticResource MTAccentButton}"
+                    Margin="10,0,0,0" IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>MT.PhotoViewer</AssemblyName>
+    <RootNamespace>MT.PhotoViewer</RootNamespace>
+    <!--
+      Sürümün TEK kaynağı burasıdır. Artırmak için:
+        tools\build-installer.ps1 -Bump patch   (1.0.1 -> 1.0.2)
+      Yeni sürümün notları Assets\ReleaseNotes.json dosyasının en üstüne yazılır.
+    -->
+    <Version>1.0.1</Version>
+    <!--
+      Güncellemelerin yayınlandığı GitHub deposu (sahip/depo). Depo HERKESE AÇIK olmalı:
+      uygulama, en son sürümün version.json dosyasını
+      https://github.com/<sahip>/<depo>/releases/latest/download/version.json adresinden okur.
+      Yayınlamak için: tools\publish-release.ps1
+    -->
+    <GitHubRepo>dangermtster-beep/MT-Photo-Viewer</GitHubRepo>
+    <!-- Başka bir yer kullanılacaksa (web sitesi, \\sunucu\paylaşım) doğrudan adres verilebilir. -->
+    <UpdateFeedUrl Condition="'$(UpdateFeedUrl)' == '' and '$(GitHubRepo)' != ''">https://github.com/$(GitHubRepo)/releases/latest/download/version.json</UpdateFeedUrl>
+    <Authors>Metin TUNÇER</Authors>
+    <Product>MT Photo Viewer</Product>
+    <ApplicationIcon>Assets\Logo\MT_PhotoViewer_Logo.ico</ApplicationIcon>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="MetadataExtractor" Version="2.8.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Logo\*.png" />
+    <EmbeddedResource Include="Assets\ReleaseNotes.json" LogicalName="ReleaseNotes.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="UpdateFeedUrl" Value="$(UpdateFeedUrl)" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,103 @@
+<UserControl x:Class="MT.PhotoViewer.Views.InfoPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FontFamily="{StaticResource UiFont}">
+
+    <!-- Guide §24 — Fotoğraf bilgi paneli -->
+    <Border Background="{DynamicResource PanelBackgroundBrush}"
+            BorderBrush="{DynamicResource BorderBrushColor}"
+            BorderThickness="1,0,0,0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Height="44">
+                <TextBlock Text="FOTOĞRAF BİLGİLERİ"
+                           VerticalAlignment="Center"
+                           Margin="18,0,0,0"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+                <Button x:Name="CloseButton"
+                        Style="{StaticResource MTIconButton}"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,6,0"
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="11"
+                        Content="&#xE8BB;"
+                        ToolTip="Kapat"/>
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="18,4,18,18">
+                <StackPanel DataContext="{Binding Metadata}">
+
+                    <TextBlock Text="{Binding FileName}"
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16"/>
+
+                    <TextBlock Text="{Binding Dimensions}" Style="{StaticResource MTValue}"
+                               Margin="0,0,0,2"
+                               Visibility="{Binding Dimensions, Converter={StaticResource EmptyToVis}}"/>
+                    <TextBlock Text="{Binding Format}" Style="{StaticResource MTValue}"
+                               Margin="0,0,0,2"
+                               Visibility="{Binding Format, Converter={StaticResource EmptyToVis}}"/>
+                    <TextBlock Text="{Binding FileSize}" Style="{StaticResource MTValue}"
+                               Margin="0,0,0,18"
+                               Visibility="{Binding FileSize, Converter={StaticResource EmptyToVis}}"/>
+
+                    <StackPanel Visibility="{Binding Camera, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Kamera" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding Camera}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Iso, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="ISO" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding Iso}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Exposure, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Pozlama" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding Exposure}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Aperture, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Diyafram" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding Aperture}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding FocalLength, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Odak" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding FocalLength}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding DateTaken, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Tarih" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding DateTaken}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Dpi, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Çözünürlük" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding Dpi}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding ColorProfile, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Renk Profili" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding ColorProfile}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Gps, Converter={StaticResource EmptyToVis}}">
+                        <TextBlock Text="Konum" Style="{StaticResource MTLabel}"/>
+                        <TextBlock Text="{Binding Gps}" Style="{StaticResource MTValue}"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

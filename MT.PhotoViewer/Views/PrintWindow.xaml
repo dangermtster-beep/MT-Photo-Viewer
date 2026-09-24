@@ -1,0 +1,127 @@
+<Window x:Class="MT.PhotoViewer.Views.PrintWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Yazdır"
+        Height="620" Width="900"
+        MinHeight="520" MinWidth="760"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        FontFamily="{StaticResource UiFont}"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}">
+
+    <Window.Resources>
+        <!-- Fluent kontrollere yalnızca boşluk ekler; görünüm WPF-UI'dan gelir. -->
+        <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </Window.Resources>
+
+    <!-- Guide §8 — Yazdır ekranı -->
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="310"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" Padding="0,0,14,0">
+            <StackPanel>
+
+                <TextBlock Text="Yazıcı" Style="{StaticResource MTLabel}" Margin="0,0,0,5"/>
+                <ComboBox x:Name="PrinterCombo"/>
+
+                <TextBlock Text="Kağıt" Style="{StaticResource MTLabel}" Margin="0,16,0,5"/>
+                <ComboBox x:Name="PaperCombo">
+                    <ComboBoxItem Content="A4" IsSelected="True"/>
+                    <ComboBoxItem Content="A3"/>
+                    <ComboBoxItem Content="Letter"/>
+                </ComboBox>
+
+                <TextBlock Text="Yön" Style="{StaticResource MTLabel}" Margin="0,16,0,5"/>
+                <StackPanel>
+                    <RadioButton x:Name="PortraitOption" GroupName="Orientation"
+                                 Content="Dikey" IsChecked="True"/>
+                    <RadioButton x:Name="LandscapeOption" GroupName="Orientation"
+                                 Content="Yatay"/>
+                </StackPanel>
+
+                <TextBlock Text="Ölçek" Style="{StaticResource MTLabel}" Margin="0,16,0,5"/>
+                <StackPanel>
+                    <RadioButton x:Name="FitOption" GroupName="Scale"
+                                 Content="Sayfaya sığdır" IsChecked="True"/>
+                    <RadioButton x:Name="ActualOption" GroupName="Scale"
+                                 Content="Gerçek boyut"/>
+                </StackPanel>
+
+                <CheckBox x:Name="CenterOption"
+                          Content="Ortala" IsChecked="True" Margin="0,16,0,0"/>
+
+                <TextBlock Text="Kenar Boşluğu (mm)" Style="{StaticResource MTLabel}" Margin="0,12,0,5"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="46"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="MarginSlider" Grid.Column="0"
+                            Minimum="0" Maximum="40" Value="10"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Value, ElementName=MarginSlider, StringFormat={}{0:0}}"
+                               VerticalAlignment="Center" TextAlignment="Right"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </Grid>
+
+                <TextBlock Text="Kopya" Style="{StaticResource MTLabel}" Margin="0,16,0,5"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="46"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="CopiesSlider" Grid.Column="0"
+                            Minimum="1" Maximum="20" Value="1"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Value, ElementName=CopiesSlider, StringFormat={}{0:0}}"
+                               VerticalAlignment="Center" TextAlignment="Right"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Baskı önizleme -->
+        <Border Grid.Row="0" Grid.Column="1"
+                Background="{DynamicResource PhotoBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrushColor}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="24">
+            <Viewbox Stretch="Uniform">
+                <Border Background="White" SnapsToDevicePixels="True">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="16" ShadowDepth="4" Opacity="0.5" Color="Black"/>
+                    </Border.Effect>
+                    <Canvas x:Name="PreviewCanvas" Width="794" Height="1123">
+                        <Image x:Name="PreviewImage"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Canvas>
+                </Border>
+            </Viewbox>
+        </Border>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button x:Name="CancelButton" Content="İptal" Style="{StaticResource MTButton}" IsCancel="True"/>
+            <Button x:Name="PrintButton" Content="Yazdır" Style="{StaticResource MTAccentButton}"
+                    Margin="10,0,0,0" IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

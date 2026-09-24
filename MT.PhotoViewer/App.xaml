@@ -1,0 +1,61 @@
+<Application x:Class="MT.PhotoViewer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:h="clr-namespace:MT.PhotoViewer.Helpers"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--
+                    WPF-UI: standart WPF kontrollerine (TextBox, ComboBox, CheckBox,
+                    RadioButton, Slider, ScrollBar, ToolTip…) Fluent görünüm verir.
+                    Aktif tema ThemeService tarafından ApplicationThemeManager ile değiştirilir.
+                -->
+                <ui:ThemesDictionary Theme="Dark"/>
+                <ui:ControlsDictionary/>
+
+                <!--
+                    Uygulamaya özel stiller WPF-UI'dan SONRA gelir; böylece anahtarlı
+                    MT* stilleri Fluent implicit stillerini geçersiz kılar.
+                    Aktif tema sözlüğü ise ThemeService tarafından en sona eklenir:
+                    WPF'te sonraki sözlükler öncekileri gölgelediği için rehberdeki
+                    renkler (§29–30) her durumda kazanır.
+                -->
+                <ResourceDictionary Source="Themes/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="Themes/MenuStyles.xaml"/>
+                <ResourceDictionary Source="Themes/ToolbarStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <h:BoolToVisibilityConverter  x:Key="BoolToVis"/>
+            <h:EmptyToVisibilityConverter x:Key="EmptyToVis"/>
+            <h:NullToVisibilityConverter  x:Key="NullToVis"/>
+            <h:EnumMatchConverter         x:Key="EnumMatch"/>
+            <h:DisplayNameConverter       x:Key="DisplayName"/>
+
+            <FontFamily x:Key="UiFont">Segoe UI</FontFamily>
+
+            <!--
+                ToolTip, hedef butondan FontFamily miras alır. İkon butonlarının fontu
+                "Segoe MDL2 Assets" olduğu için tooltip metni kutucuk (tofu) olarak
+                çiziliyordu; burada arayüz fontuna sabitliyoruz.
+            -->
+            <Style TargetType="ToolTip" BasedOn="{StaticResource {x:Type ToolTip}}">
+                <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
+                <Setter Property="FontSize" Value="12"/>
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="MTLabel">
+                <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                <Setter Property="FontSize" Value="11"/>
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="MTValue">
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="Margin" Value="0,1,0,12"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
